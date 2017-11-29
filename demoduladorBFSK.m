@@ -34,16 +34,15 @@ if(modo == 1)
         y_dem=[y_dem a];
     end
 elseif(modo == 2)
-<<<<<<< HEAD
     %     F0_l=fc-175-((564.48/2)*(1+0.7));
     %     F0_h=fc+175-((564.48/2)*(1-0.7));
     %     F1_l=fc-175+((564.48/2)*(1-0.7));
     %     F1_h=fc+175+((564.48/2)*(1+0.7));
 
-        F1_l=fc-Rb/2-Rb/2;
-        F1_h=fc-Rb/2+Rb/2;
-        F0_l=fc+Rb/2-Rb/2;
-        F0_h=fc+Rb/2+Rb/2;
+    F1_l=fc-Rb/2-Rb/2;
+    F1_h=fc-Rb/2+Rb/2;
+    F0_l=fc+Rb/2-Rb/2;
+    F0_h=fc+Rb/2+Rb/2;
 
     N      = 4;         % Order
     Apass  = 1;         % Passband Ripple (dB)
@@ -53,37 +52,15 @@ elseif(modo == 2)
     h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, ...
                           Astop, Apass, Astop, fs);
     bpf_0 = design(h, 'ellip');
+    
     h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, ...
                           Astop, Apass, Astop, fs);
     bpf_1 = design(h, 'ellip');
-=======
-%     F0_l=fc-175-((564.48/2)*(1+0.7));
-%     F0_h=fc+175-((564.48/2)*(1-0.7));
-%     F1_l=fc-175+((564.48/2)*(1-0.7));
-%     F1_h=fc+175+((564.48/2)*(1+0.7));
-
-    F1_l=fc-Rb/2-Rb/2;
-    F1_h=fc-Rb/2+Rb/2;
-    F0_l=fc+Rb/2-Rb/2;
-    F0_h=fc+Rb/2+Rb/2;
     
-N      = 4;         % Order
-Apass  = 1;         % Passband Ripple (dB)
-Astop  = 10;        % Stopband Attenuation (dB)
-
-% Construct an FDESIGN object and call its ELLIP method.
-h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, ...
-                      Astop, Apass, Astop, fs);
-bpf_0 = design(h, 'ellip');
-h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, ...
-                      Astop, Apass, Astop, fs);
-bpf_1 = design(h, 'ellip');
->>>>>>> a1264165f274c64e3af325c425ee08afb6b2ae0b
-
     sLen = length(t);
     y_dem =[];
 
-     for i=sLen:sLen:length(y)
+    for i=sLen:sLen:length(y)
         y0_filt = filter(bpf_0,y((i-sLen+1):i));
         y0=sum(y0_filt.^2);
         y1_filt = filter(bpf_1,y((i-sLen+1):i));
@@ -98,7 +75,7 @@ bpf_1 = design(h, 'ellip');
             a=1;
         end
         y_dem=[y_dem a];
-<<<<<<< HEAD
+        
      end
     
 elseif(modo == 3)   
@@ -117,64 +94,9 @@ elseif(modo == 4)
 %         else
 %             y_dem = [y_dem 1];
 %         end
-    end
-=======
+%     end
  end
 
-elseif(modo == 3)
-   Bn = 25;
-   [LO,error0] = pll(y, fc, fs, Bn);
-    figure(2);
-     plot(LO);
-    dem = LO.*y;
-    figure(3);
-    plot(dem);
-
-N     = 4;         % Order
-Fpass = 1000;      % Passband Frequency
-Apass = 1;         % Passband Ripple (dB)
-Astop = 80;        % Stopband Attenuation (dB)
-
-h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
-
-bpf = design(h, 'ellip', ...
-    'SystemObject', true);
-
-    dem_filt = filter(bpf,dem(1:56));
-    figure(4);
-    plot(dem_filt);
-
-
-    
-y_dem = 0;
-
-elseif(modo == 4)
-    error0acum = [];
-    error1acum = [];
-    Bn = 25; 
-    y_dem =[];
-    sLen = length(t);
-    for i=sLen:sLen:length(y)
-        [cos_dem0,error0] = pll(y((i-sLen+1):i), f0, fs, Bn);
-        [cos_dem1,error1] = pll(y((i-sLen+1):i), f1, fs, Bn);
-        if(sum(error0.^2)<sum(error1.^2))
-            y_dem = [y_dem cos_dem0];
-        else
-            y_dem = [y_dem cos_dem1];
-        end
-        error0acum = [error0acum error0];
-        error1acum = [error1acum error1];
-    end
-% figure(2);
-% plot(error0acum.^2); hold on; plot(error1acum.^2); hold off;
-end
-
-
-
-
-
-
->>>>>>> a1264165f274c64e3af325c425ee08afb6b2ae0b
 end
 
 
