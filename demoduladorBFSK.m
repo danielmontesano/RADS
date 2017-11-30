@@ -70,39 +70,46 @@ bpf_1 = design(h, 'ellip');
 %        plot(linspace(0,fs,10^6),10*log10(abs(fft(y1_filt,10^6))));
 
         if(y1<y0)
-            a=0
+            a=0;
         elseif(y1>y0)
-            a=1
+            a=1;
         end
         y_dem=[y_dem a];
  end
 
 elseif(modo == 3)
-   Bn = 25;
-   [LO,error0] = pll(y, fc, fs, Bn);
-    figure(2);
-     plot(LO);
-    dem = LO.*y;
-    figure(3);
-    plot(dem);
+     y_dem =[];
+   x = Ts:Ts:length(y)/fs;
+   LO_1 = cos(2*pi*f1*x);
+   LO_0 = cos(2*pi*f0*x);
+   
+   dem1 = y.*LO_1;
+   dem0 = y.*LO_0;
+   
 
 N     = 4;         % Order
-Fpass = 1000;      % Passband Frequency
+Fpass = Rb;      % Passband Frequency
 Apass = 1;         % Passband Ripple (dB)
 Astop = 80;        % Stopband Attenuation (dB)
 
 h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
 
-bpf = design(h, 'ellip', ...
-    'SystemObject', true);
+bpf = design(h, 'ellip');
 
-    dem_filt = filter(bpf,dem(1:56));
-    figure(4);
-    plot(dem_filt);
-
-
+    dem0_filt = filter(bpf,dem0);
     
-y_dem = 0;
+    dem1_filt = filter(bpf,dem1);
+   
+ 
+ for k=Tb*fs:Tb*fs:length(y)
+        if (dem1_filt(k)>dem0_filt(k))
+            a=0;
+        elseif(dem1_filt(k)<dem0_filt(k))
+            a=1;
+        end
+         y_dem=[y_dem a];
+        
+ end
 
 elseif(modo == 4)
     error0acum = [];
