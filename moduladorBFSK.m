@@ -2,7 +2,7 @@ function [s] = moduladorBFSK(x,Rb,fs)
 %% TX
 % Frecuencias de Simbolo
 f0 = 8*Rb;
-f1 = 2*Rb;
+f1 = 7*Rb;
 
 % Periodos
 T0 = 1/f0;

@@ -1,5 +1,5 @@
 function [cos_out, error_vector] = pll(y, f0, fs, Bn)
-    
+
 % Parametros
 kp=1;
 k0=1;
@@ -13,7 +13,7 @@ k2 = 4*wn^2/(1+2*dseta*wn+wn^2);     %k2=0.0059;
 
 %discrete-time simulation 
 N         = length(y); %iterations
-theta_est = pi;
+theta_est = pi/2;
 w0        = 2*pi*f0*T;      %frequency (rad/sample)
 % deltaw0   = 2*pi*deltaf0*T; %frequency offset (rad/sample)
 
@@ -31,7 +31,7 @@ for n=0:N-1,
   c_est = cos(theta_est);
   phase_det = kp*(s_in*s_est);
   error = phase_det;
-
+  
   %plots
   s_inVector(n+1)   = s_in; 
   Real_exp_est(n+1) = s_est;
@@ -46,3 +46,20 @@ for n=0:N-1,
   M2 = v + M2 + w0;
   theta_est = M2; 
 end
+
+b = 0;
+% 
+subplot(311)
+plot(0:N-1, s_inVector); axis tight; grid
+title('Re\{s_{in}\}')
+
+subplot(312)
+plot(0:N-1, s_inVector, 'b'); hold on
+plot(0:N-1, cos_out, 'r'); axis tight; grid; hold off
+title('Re\{exp_{in}\} (blue) and Re\{s_{est}\} (red)')
+
+subplot(313)
+plot(0:N-1,v_vect); grid; axis tight
+
+
+b = 0;
