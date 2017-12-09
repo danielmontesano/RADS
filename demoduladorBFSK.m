@@ -75,10 +75,41 @@ elseif(modo == 2)
             a=1;
         end
         y_dem=[y_dem a];
-        
-     end
+ end
+
+elseif(modo == 3)
+     y_dem =[];
+   x = Ts:Ts:length(y)/fs;
+   LO_1 = cos(2*pi*f1*x);
+   LO_0 = cos(2*pi*f0*x);
+   
+   dem1 = y.*LO_1;
+   dem0 = y.*LO_0;
+   
+
+N     = 4;         % Order
+Fpass = Rb;      % Passband Frequency
+Apass = 1;         % Passband Ripple (dB)
+Astop = 80;        % Stopband Attenuation (dB)
+
+h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
+
+bpf = design(h, 'ellip');
+
+    dem0_filt = filter(bpf,dem0);
     
-elseif(modo == 3)   
+    dem1_filt = filter(bpf,dem1);
+   
+ 
+ for k=Tb*fs:Tb*fs:length(y)
+        if (dem1_filt(k)>dem0_filt(k))
+            a=0;
+        elseif(dem1_filt(k)<dem0_filt(k))
+            a=1;
+        end
+         y_dem=[y_dem a];
+        
+ end
 
         
 elseif(modo == 4)

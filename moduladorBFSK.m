@@ -1,4 +1,4 @@
-function [s] = moduladorBFSK(x,Rb)
+function [s] = moduladorBFSK(x,Rb,fs)
 %% TX
 % Frecuencias de Simbolo
 f0 = 8*Rb;
@@ -10,7 +10,7 @@ T1 = 1/f1;
 
 % Frecuancia Portadora y Muestreo
 fc = 7.5*Rb;
-fs = 56*Rb;
+
 Ts = 1/fs;
 
 Tb = 1/Rb;
