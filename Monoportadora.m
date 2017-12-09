@@ -16,7 +16,6 @@ w = 0.01*randn(1,length(s));
 y=h.*s+w;
 
 %% RX
-[ y_dem ] = demoduladorBFSK(y, Rb, 2);
 figure(1)
 subplot(3,1,1)
 plot(s);
