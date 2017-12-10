@@ -48,7 +48,6 @@ elseif(modo == 2)
     Apass  = 1;         % Passband Ripple (dB)
     Astop  = 10;        % Stopband Attenuation (dB)
 
-    % Construct an FDESIGN object and call its ELLIP method.
     h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, ...
                           Astop, Apass, Astop, fs);
     bpf_0 = design(h, 'ellip');
@@ -75,51 +74,45 @@ elseif(modo == 2)
             a=1;
         end
         y_dem=[y_dem a];
- end
+    end
 
 elseif(modo == 3)
-     y_dem =[];
-   x = Ts:Ts:length(y)/fs;
-   LO_1 = cos(2*pi*f1*x);
-   LO_0 = cos(2*pi*f0*x);
-   
-   dem1 = y.*LO_1;
-   dem0 = y.*LO_0;
-   
+    y_dem =[];
+    x = Ts:Ts:length(y)/fs;
+    LO_1 = cos(2*pi*f1*x);
+    LO_0 = cos(2*pi*f0*x);
 
-N     = 4;         % Order
-Fpass = Rb;      % Passband Frequency
-Apass = 1;         % Passband Ripple (dB)
-Astop = 80;        % Stopband Attenuation (dB)
+    dem1 = y.*LO_1;
+    dem0 = y.*LO_0;
 
-h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
+    N     = 4;         % Order
+    Fpass = Rb;      % Passband Frequency
+    Apass = 1;         % Passband Ripple (dB)
+    Astop = 80;        % Stopband Attenuation (dB)
 
-bpf = design(h, 'ellip');
-
-    dem0_filt = filter(bpf,dem0);
+    h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
+    bpf = design(h, 'ellip');
+    dem0_filt = filter(bpf,dem0);  
+    dem1_filt = filter(bpf,dem1); 
     
-    dem1_filt = filter(bpf,dem1);
-   
- 
- for k=Tb*fs:Tb*fs:length(y)
+    for k=Tb*fs:Tb*fs:length(y)
         if (dem1_filt(k)>dem0_filt(k))
             a=0;
         elseif(dem1_filt(k)<dem0_filt(k))
             a=1;
         end
-         y_dem=[y_dem a];
-        
- end
-
-        
+        y_dem=[y_dem a];       
+    end
+    
 elseif(modo == 4)
     Bn = 25;
     y_dem = [];
-    sLen = length(t);    
-    [theta] = pll2(y, f0, fs, Bn);
+    sLen = length(t);  
+    [theta] = pll2(y, f1, fs, Bn);
+    y_dem = y;
 %     for i=sLen:sLen:length(y)
-%         [theta] = pll2(y((i-sLen+1):i), f0, fs, Bn);
-%         [theta] = pll2(y((i-sLen+1):i), f1, fs, Bn);
+%         [theta,error0] = pll2(y((i-sLen+1):i), f0, fs, Bn);
+%         [theta,error1] = pll2(y((i-sLen+1):i), f1, fs, Bn);
 %         if(sum(error0.^2)<sum(error1.^2))
 %             y_dem = [y_dem 0];
 %         else
