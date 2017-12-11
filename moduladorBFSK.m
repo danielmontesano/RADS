@@ -1,21 +1,14 @@
-function [s] = moduladorBFSK(x,Rb,fs)
-%% TX
-% Frecuencias de Simbolo
-f0 = 8*Rb;
-f1 = 7*Rb;
+function [s] = moduladorBFSK(x,Rb,f0,f1,fs)
 
 % Periodos
 T0 = 1/f0;
 T1 = 1/f1;
 
-% Frecuancia Portadora y Muestreo
-fc = 7.5*Rb;
-
+% Periodo muestreo
 Ts = 1/fs;
 
 Tb = 1/Rb;
 t = 0:(Ts):(Tb-Ts);
-s = [];
 
 dPhi1 = (2*pi)/(fs*T1);
 dPhi0 = (2*pi)/(fs*T0);

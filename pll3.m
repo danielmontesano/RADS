@@ -1,4 +1,4 @@
-function [theta] = pll3(y, f0, fs, Bn)
+function [theta,fl] = pll3(y, f0, fs, Bn)
 
 fl=500; 
 ff=[0 .01 .02 1]; 
@@ -11,8 +11,8 @@ Ts = 1/fs;
 t = 0:Ts:(length(y)*Ts - Ts);
 
 % Inicializacion
-mu = 0.0018;
-theta(1)=0.8; % estimate vector
+mu = 0.2218;
+theta(1)=0.01; % estimate vector
 zs=zeros(1,fl+1); 
 zc=zeros(1,fl+1);
 

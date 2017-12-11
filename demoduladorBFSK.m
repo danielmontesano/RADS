@@ -1,10 +1,4 @@
-function [ y_dem ] = demoduladorBFSK(y, Rb, modo)
-
-% Frecuencias de Simbolo
-f0 = 8*Rb;
-f1 = 7*Rb;
-
-fc=(f0+f1)/2;
+function [ y_dem ] = demoduladorBFSK(y, Rb,f0,f1,fc,modo)
 
 % Frecuencia de Muestreo
 fs = 56*Rb;
@@ -85,10 +79,10 @@ elseif(modo == 3)
     dem1 = y.*LO_1;
     dem0 = y.*LO_0;
 
-    N     = 4;         % Order
+    N     = 4;       % Order
     Fpass = Rb;      % Passband Frequency
-    Apass = 1;         % Passband Ripple (dB)
-    Astop = 80;        % Stopband Attenuation (dB)
+    Apass = 1;       % Passband Ripple (dB)
+    Astop = 80;      % Stopband Attenuation (dB)
 
     h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
     bpf = design(h, 'ellip');
@@ -108,17 +102,17 @@ elseif(modo == 4)
     Bn = 25;
     y_dem = [];
     sLen = length(t);  
-    [theta] = pll2(y, f1, fs, Bn);
+%     [theta] = pll3(y, f1, fs, Bn);
     y_dem = y;
-%     for i=sLen:sLen:length(y)
-%         [theta,error0] = pll2(y((i-sLen+1):i), f0, fs, Bn);
-%         [theta,error1] = pll2(y((i-sLen+1):i), f1, fs, Bn);
-%         if(sum(error0.^2)<sum(error1.^2))
-%             y_dem = [y_dem 0];
-%         else
-%             y_dem = [y_dem 1];
-%         end
-%     end
+    for i=sLen:sLen:length(y)
+        [theta,error0] = pll3(y((i-sLen+1):i), f0, fs, Bn);
+        [theta,error1] = pll3(y((i-sLen+1):i), f1, fs, Bn);
+        if(sum(error0.^2)<sum(error1.^2))
+            y_dem = [y_dem 0];
+        else
+            y_dem = [y_dem 1];
+        end
+    end
  end
 
 end
