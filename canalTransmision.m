@@ -13,17 +13,19 @@ function [ y_out ] = canalTransmision( y, Rb, fs, d )
     y_ret = [zeros(1,n_ret) y zeros(1,max(n_disp))];
     
     %Dispersion
-    a = rand(); %Coeficiente de reflexion. Se podria cambiar la distribucion
+   
     
     for k=1:multi
-        y_ref = a.*y;
-        y_disp = y_ret + [zeros(1,n_ret) zeros(1,n_disp(k)) y_ref zeros(1,max(n_disp)-n_disp(k))];
+        a = rand(); %Coeficiente de reflexion. Se podria cambiar la distribucion o calcular ademas en funcion del retardo extra
+        y_refl = a.*y;
+        y_disp = y_ret + [zeros(1,n_ret) zeros(1,n_disp(k)) y_refl zeros(1,max(n_disp)-n_disp(k))];
     end
     
     %Ruido blanco
     w = 0.1*randn(1,length(y_ret));
     
-    %
+    %Interferencias
+    
     
     y_out = y_ret + w;
     plot(y_out)
