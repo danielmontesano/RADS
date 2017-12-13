@@ -1,34 +1,45 @@
 clear all
+close all
 clc
 
 %% TX
-x = [1 0 1 1 0 1];
-% x = ones(1,1000);
+N = 100; % Longitud del Mensaje
+% x = ones(1,200); % Solo 1s
+x = round(rand(1,N)); % Mensaje de 0s y 1s de longitud N
 Rb = 564.48; %bps
 fs = 56*Rb;
 
-s = moduladorBFSK(x,Rb,fs);
+% Frecuencias de Simbolo
+f0 = 8*Rb;
+f1 = 7*Rb;
+
+% Frecuancia Portadora y Muestreo
+fc = 7.5*Rb;
+
+s = moduladorBFSK(x,Rb,f0,f1,fs);
 
 %% CHANNEL
-
 h = 1;
-w = 1*randn(1,length(s));
+w = 0.02*randn(1,length(s));
 y=h.*s+w;
 
 %% RX
-% [ y_dem ] = demoduladorBFSK(y, Rb, 1);
-[ y_dem ] = demoduladorBFSK(y, Rb, 4);
-% display(['Received Signal: ' num2str(y_dem)])
 
+% Opcion 1: Demodulación de los simbolos
+% Opcion 2: Filtros paso-banda sintonizados a las frecuencias de los bits con detección de energía.
+% Opcion 3: Demodulación de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con detección de energía.
+% Opcion 4: PLLs para las frecuencias de los bits.
+
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fs,2);
 figure(1)
 subplot(3,1,1)
 plot(s);
-title('Seï¿½al Original')
+title('Señal Original')
 subplot(3,1,2)
 plot(y)
-title('Seï¿½al Recibida')
+title('Señal Recibida')
 subplot(3,1,3)
 plot(y_dem)
-title('Seï¿½al Demodulada')
+title('Señal Demodulada')
 
 display(['Received Signal: ' num2str(y_dem)])
