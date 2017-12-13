@@ -21,16 +21,13 @@ function [ y_out ] = canalTransmision( y, Rb, fs, d )
     
     %Ruido blanco
     w = 0.1*randn(1,length(y_ret));
-<<<<<<< HEAD
+
     
     %Interferencias
     
     
     y_out = y_ret + w;
-=======
-        
-    y_out = y_disp + w;
->>>>>>> origin/master
+
     plot(y_out)
 end
 
