@@ -4,8 +4,8 @@ clc
 
 %% TX
 N = 100; % Longitud del Mensaje
-% x = ones(1,200); % Solo 1s
-x = round(rand(1,N)); % Mensaje de 0s y 1s de longitud N
+x = ones(1,1000); % Solo 1s
+% x = round(rand(1,N)); % Mensaje de 0s y 1s de longitud N
 Rb = 564.48; %bps
 fs = 56*Rb;
 
@@ -20,7 +20,7 @@ s = moduladorBFSK(x,Rb,f0,f1,fs);
 
 %% CHANNEL
 h = 1;
-w = 0.02*randn(1,length(s));
+w = 0.2*randn(1,length(s));
 y=h.*s+w;
 
 %% RX
@@ -30,7 +30,7 @@ y=h.*s+w;
 % Opcion 3: Demodulación de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con detección de energía.
 % Opcion 4: PLLs para las frecuencias de los bits.
 
-[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fs,2);
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fs,4);
 figure(1)
 subplot(3,1,1)
 plot(s);
