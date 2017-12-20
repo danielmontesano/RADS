@@ -52,7 +52,7 @@ elseif(modo == 2)
     
     sLen = length(t);
     y_dem =[];
-
+    
     for i=sLen:sLen:length(y)
         y0_filt = filter(bpf_0,y((i-sLen+1):i));
         y0=sum(y0_filt.^2);
@@ -99,20 +99,22 @@ elseif(modo == 3)
     end
     
 elseif(modo == 4)
-    Bn = 25;
+    Bn = 10;
     y_dem = [];
-    sLen = length(t);  
-%     [theta] = pll3(y, f1, fs, Bn);
-    y_dem = y;
-    for i=sLen:sLen:length(y)
-        [theta,error0] = pll3(y((i-sLen+1):i), f0, fs, Bn);
-        [theta,error1] = pll3(y((i-sLen+1):i), f1, fs, Bn);
-        if(sum(error0.^2)<sum(error1.^2))
-            y_dem = [y_dem 0];
-        else
-            y_dem = [y_dem 1];
-        end
-    end
+    sLen = length(t);
+    
+    [theta] = pll2(y, f1, fs, Bn);
+    [theta] = pll2(y, f0, fs, Bn);
+%     y_dem = y;
+%     for i=sLen:sLen:length(y)
+%         [theta,error0] = pll3(y((i-sLen+1):i), f0, fs, Bn);
+%         [theta,error1] = pll3(y((i-sLen+1):i), f1, fs, Bn);
+%         if(sum(error0.^2)<sum(error1.^2))
+%             y_dem = [y_dem 0];
+%         else
+%             y_dem = [y_dem 1];
+%         end
+%     end
  end
 
 end

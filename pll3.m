@@ -11,8 +11,8 @@ Ts = 1/fs;
 t = 0:Ts:(length(y)*Ts - Ts);
 
 % Inicializacion
-mu = 0.2218;
-theta(1)=0.01; % estimate vector
+mu = 0.002218;
+theta(1)=0.1; % estimate vector
 zs=zeros(1,fl+1); 
 zc=zeros(1,fl+1);
 
