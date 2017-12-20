@@ -24,26 +24,26 @@ s = moduladorBFSK(x,Rb,f0,f1,fs);
 
 %% CHANNEL
 h = 1;
-w = 0.02*randn(1,length(s));
+w = 0.2*randn(1,length(s));
 y=h.*s+w;
 
 %% RX
 
-% Opcion 1: Demodulación de los simbolos
-% Opcion 2: Filtros paso-banda sintonizados a las frecuencias de los bits con detección de energía.
-% Opcion 3: Demodulación de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con detección de energía.
+% Opcion 1: Demodulaciï¿½n de los simbolos
+% Opcion 2: Filtros paso-banda sintonizados a las frecuencias de los bits con detecciï¿½n de energï¿½a.
+% Opcion 3: Demodulaciï¿½n de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con detecciï¿½n de energï¿½a.
 % Opcion 4: PLLs para las frecuencias de los bits.
 
-[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,2);
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fs,2);
 figure(1)
 subplot(3,1,1)
 plot(s);
-title('Señal Original')
+title('Seï¿½al Original')
 subplot(3,1,2)
 plot(y)
-title('Señal Recibida')
+title('Seï¿½al Recibida')
 subplot(3,1,3)
 plot(y_dem)
-title('Señal Demodulada')
+title('Seï¿½al Demodulada')
 
 display(['Received Signal: ' num2str(y_dem)])

@@ -29,7 +29,7 @@ for i = 1:bloquesFrecuenciales
 
     % CHANNEL
     h = 1;
-    w = 1.32*randn(1,length(s));
+    w = 0.32*randn(1,length(s));
     y=h.*s+w;
 
     % RX

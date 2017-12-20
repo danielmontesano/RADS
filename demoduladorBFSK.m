@@ -54,17 +54,6 @@ Astop  = 80;     % Stopband Attenuation (dB)
                           Astop, Apass, Astop, fs);
     bpf_1 = design(h, 'ellip');
     
-    
-    y0 = filter(bpf_0,y);
-    y1 = filter(bpf_1,y);
-    plot(y0)
-    
-    y0 = y0.^2;
-    y1 = y1.^2;
-    
-    Fpass = Rb;      % Passband Frequency
-  
-
     h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
     bpf = design(h, 'ellip');
     
@@ -127,20 +116,13 @@ elseif(modo == 3)
     end
     
 elseif(modo == 4)
-    Bn = 50;
+    Bn = 10;
     y_dem = [];
-    sLen = length(t);  
+    sLen = length(t);
+    
     [theta] = pll2(y, f1, fs, Bn);
-    y_dem = y;
-%     for i=sLen:sLen:length(y)
-%         [theta,error0] = pll3(y((i-sLen+1):i), f0, fs, Bn);
-%         [theta,error1] = pll3(y((i-sLen+1):i), f1, fs, Bn);
-%         if(sum(error0.^2)<sum(error1.^2))
-%             y_dem = [y_dem 0];
-%         else
-%             y_dem = [y_dem 1];
-%         end
-%     end
+    [theta] = pll2(y, f0, fs, Bn);
+%     y_dem = y;
  end
 
 end

@@ -6,7 +6,7 @@ fa=[1 1 0 0];
 h=firpm(fl,ff,fa);
 
 % % Parametros
-dseta=1;
+dseta=50;
 T=1/fs;  %sampling frequency
 
 %Computing the P-I loop-filter constants; k1 and k2

@@ -13,7 +13,7 @@ t = 0:(Ts):(Tb-Ts);
 dPhi1 = (2*pi)/(fs*T1);
 dPhi0 = (2*pi)/(fs*T0);
 
-phaseArray = 0;
+phaseArray = 0.5;
 
 for i = 1:length(x)
     if(x(i) == 1)
@@ -27,3 +27,4 @@ end
 phaseArray=wrapTo2Pi(phaseArray);
 s = cos(phaseArray);
 
+end
