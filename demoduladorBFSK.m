@@ -35,60 +35,45 @@ elseif(modo == 2)
     %     F0_h=fc+175-((564.48/2)*(1-0.7));
     %     F1_l=fc-175+((564.48/2)*(1-0.7));
     %     F1_h=fc+175+((564.48/2)*(1+0.7));
-
+    
+    y = [y zeros(1,20)];
     F1_l=fc-Rb/2-Rb/2;
     F1_h=fc-Rb/2+Rb/2;
     F0_l=fc+Rb/2-Rb/2;
     F0_h=fc+Rb/2+Rb/2;
 
-
-    N      = 20;      % Order
-    Apass  = 0.1;      % Passband Ripple (dB)
+    N      = 2;      % Order
+    Apass  = 1;      % Passband Ripple (dB)
     Astop  = 80;     % Stopband Attenuation (dB)
 
-    % Filtros paso banda en ambas frecuencias
-    h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, Astop, Apass, Astop, fs);
-    bpf_0 = design(h, 'ellip');    
-    h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, Astop, Apass, Astop, fs);
-    bpf_1 = design(h, 'ellip');
-    
-    % Filtro paso bajo
-    h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
-    lpf = design(h, 'ellip');
-    
+    % Band Pass Filter F1
+    h0  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, Astop, Apass, Astop, fs);
+    bpf_0 = design(h0, 'ellip');
     y0 = filter(bpf_0,y);
+    
+    % Band Pass Filter F0
+    h1  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, Astop, Apass, Astop, fs);
+    bpf_1 = design(h1, 'ellip');
     y1 = filter(bpf_1,y);
     
-    y0 = filter(lpf,y0);
-    y1 = filter(lpf,y1);
+    % Low Pass Filter para Envolvente
+    Fpass = Rb;    
+    h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
+    lpf = design(h, 'ellip');
     
+    % Obtencion de Envolvente (Simbolos)
+    y0 = filter(lpf,y0.^2);
+    y1 = filter(lpf,y1.^2);   
     y_dem = y1 - y0;
     
-    rect = [zeros(1,sLen) ones(1,sLen) zeros(1,sLen)];
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %FALTA HACER EL TIME RECOVERY PARA ELEGIR EL INSTANTE IDEAL DE MUESTREO
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+%     rect = [zeros(1,sLen) ones(1,sLen) zeros(1,sLen)];
 %     sync =  srrc(sLen*2, 0.3, 1, 0);
-    y_conv = conv(y_dem,rect); %NO MEJORA
+%     y_conv = conv(y_dem,rect); %NO MEJORA
     
-    
-%    y_dem =[];
-    
-% 
-%     for i=sLen:sLen:length(y)
-%         y0_filt = filter(bpf_0,y((i-sLen+1):i));
-%         y0=sum(y0_filt.^2);
-%         y1_filt = filter(bpf_1,y((i-sLen+1):i));
-%         y1=sum(y1_filt.^2);
-% %         figure;
-% %         plot(linspace(0,fs,10^6),10*log10(abs(fft(y0_filt,10^6))));
-% %         hold on
-% %         plot(linspace(0,fs,10^6),10*log10(abs(fft(y1_filt,10^6))));
-%         if(y1<y0)
-%             a=0;
-%         elseif(y1>y0)
-%             a=1;
-%         end
-%         y_dem=[y_dem a];
-%     end
-
 %% MODO 3: DEMODULACIÓN Y FILTROS PASO BANDA SINTONIZADOS
 elseif(modo == 3)
     y_dem =[];
@@ -122,11 +107,37 @@ elseif(modo == 3)
 elseif(modo == 4)
     Bn = 10;
     y_dem = [];
-    sLen = length(t);
+    sLen = length(t); % Longitud de cada simbolo    
+    tPll = 0:Ts:(length(y)*Ts - Ts); % Vector de tiempos completo
     
-    [theta] = pll2(y, f1, fs, Bn);
-    [theta] = pll2(y, f0, fs, Bn);
-%     y_dem = y;
- end
+    % PLL Frecuencia 1s
+    [thetaF1] = pll2(y, f1, fs, Bn);
+    pll_out1 = cos(2*pi*f1*tPll - thetaF1);
+    yL_f1 = y.*pll_out1;     
+%     figure(5)
+%     plot(y)
+%     hold on
+%     plot(pll_out1)
+    
+    % PLL Frecuencia 0s
+    [thetaF0] = pll2(y, f0, fs, Bn);
+    pll_out0 = sin(2*pi*f0*tPll + thetaF0);
+    yL_f0 = y.*pll_out0;
+        
+    % Low Pass Filter para Envolvente
+    N     = 2;       % Order
+    Fpass = Rb;      % Passband Frequency
+    Apass = 1;       % Passband Ripple (dB)
+    Astop = 80;      % Stopband Attenuation (dB)
+    h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
+    lpf = design(h, 'ellip');
+    
+    yL_f0 = [yL_f0 zeros(1,1000)];
+    yL_f1 = [yL_f1 zeros(1,1000)];
+    
+    y0 = filter(lpf,yL_f0.^2);
+    y1 = filter(lpf,yL_f1.^2);
+    y_dem = y1 - y0;
+end
 
 end

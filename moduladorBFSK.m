@@ -13,7 +13,7 @@ t = 0:(Ts):(Tb-Ts);
 dPhi1 = (2*pi)/(fs*T1);
 dPhi0 = (2*pi)/(fs*T0);
 
-phaseArray = 0.5;
+phaseArray = 0.8;
 
 for i = 1:length(x)
     if(x(i) == 1)
