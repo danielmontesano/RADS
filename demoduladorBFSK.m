@@ -42,13 +42,14 @@ elseif(modo == 2)
     Apass  = 1;         % Passband Ripple (dB)
     Astop  = 10;        % Stopband Attenuation (dB)
 
-    h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, ...
+    h1  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, ...
                           Astop, Apass, Astop, fs);
-    bpf_0 = design(h, 'ellip');
+    bpf_0 = design(h1, 'ellip');
     
-    h  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, ...
+    
+    h2  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, ...
                           Astop, Apass, Astop, fs);
-    bpf_1 = design(h, 'ellip');
+    bpf_1 = design(h2, 'ellip');
     
     sLen = length(t);
     y_dem =[];
