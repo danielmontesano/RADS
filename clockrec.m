@@ -14,12 +14,12 @@ x=r;
 % else
 %     tnow = m*m+1;
 % end
-tnow = m*m+1;
+tnow = round(m/2);
 tau=0; 
 tausave(1)=tau; i=0;
-mu=1;                            % algorithm stepsize
+mu=1.5;                            % algorithm stepsize
 delta=1;                          % time for derivative
-while tnow<length(x)-m              % run iteration
+while tnow<length(x)              % run iteration
   i=i+1;
   
   xs(i) = interp1([floor(tnow+tau) (floor(tnow+tau)+1)],...
