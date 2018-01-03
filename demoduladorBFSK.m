@@ -64,7 +64,7 @@ elseif(modo == 2)
     % Obtencion de Envolvente (Simbolos)
     y0 = filter(lpf,y0.^2);
     y1 = filter(lpf,y1.^2);   
-    y_dem = y1 - y0;
+    y_dem = (y1 - y0);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %FALTA HACER EL TIME RECOVERY PARA ELEGIR EL INSTANTE IDEAL DE MUESTREO
@@ -114,10 +114,6 @@ elseif(modo == 4)
     [thetaF1] = pll2(y, f1, fs, Bn);
     pll_out1 = cos(2*pi*f1*tPll - thetaF1);
     yL_f1 = y.*pll_out1;     
-%     figure(5)
-%     plot(y)
-%     hold on
-%     plot(pll_out1)
     
     % PLL Frecuencia 0s
     [thetaF0] = pll2(y, f0, fs, Bn);
@@ -125,7 +121,7 @@ elseif(modo == 4)
     yL_f0 = y.*pll_out0;
         
     % Low Pass Filter para Envolvente
-    N     = 2;       % Order
+    N     = 4;       % Order
     Fpass = Rb;      % Passband Frequency
     Apass = 1;       % Passband Ripple (dB)
     Astop = 80;      % Stopband Attenuation (dB)
@@ -137,7 +133,7 @@ elseif(modo == 4)
     
     y0 = filter(lpf,yL_f0.^2);
     y1 = filter(lpf,yL_f1.^2);
-    y_dem = y1 - y0;
+    y_dem = (y1 - y0);
 end
 
 end

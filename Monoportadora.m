@@ -3,13 +3,13 @@ close all
 clc
 
 %% TX
-N = 1000; % Longitud del Mensaje
+N = 2000; % Longitud del Mensaje
 M = 200; % Numero de simbolos necesarios para el lock del PLL
 
 train = [1 0 1 0 ones(1,M) zeros(1,M) 1 0 1];
 x = [train round(rand(1,N))]; % Solo 1s
-x = [ones(1,200) zeros(1,200) 1 0 1 0 1 0 1 1 0 1 0 0 1 0 1 0 1 0 1 0];
-% x = [0 0 0 1 1 1 0 0 0 1 1 0 0 1 0 1 0];
+% x = [ones(1,200) zeros(1,200) 1 0 1 0 1 0 1 1 0 1 0 0 1 0 1 0 1 0 1 0];
+x = [ones(1,200) zeros(1,200) round(rand(1,N))];
 % x = round(rand(1,N)); % Mensaje de 0s y 1s de longitud N
 
 Rb = 564.48; %bps
@@ -36,19 +36,21 @@ y=h.*s+w;
 % Opcion 3: Demodulacion de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
 % Opcion 4: PLLs para las frecuencias de los bits.
 
-% [ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,2);
-[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,4);
-
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,2);
+[ y_clock ] = clockrec( y_dem, 0.1, fs, Rb );
 
 %% RESULTADOS
-figure(1)
-subplot(3,1,1)
-plot(s);
+figure
+subplot(4,1,1)
+plot(x);
 title('Original Signal')
-subplot(3,1,2)
+subplot(4,1,2)
+plot(s);
+title('Sent Signal')
+subplot(4,1,3)
 plot(y)
 title('Received Signal')
-subplot(3,1,3)
+subplot(4,1,4)
 plot(y_dem)
 title('Demoduladated Signal')
 

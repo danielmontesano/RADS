@@ -46,6 +46,6 @@ end
 
 figure
 plot(t, theta),
-title('Phase Tracking via the Costas Loop')
-xlabel('time'); 
-ylabel('phase offset')
+title('Seguimiento de Fase del PLL')
+xlabel('Tiempo'); 
+ylabel('Offset de Fase')
