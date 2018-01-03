@@ -4,21 +4,21 @@ Ts = 1/fs;
 Tb = 1/Rb;
 t = 0:(Ts):(Tb-Ts);
 
-n = length(r);
 l=length(t); 
 m=56;
 x=r;
 % matchfilt=srrc(l,beta,m,0);
 % x=conv(r,matchfilt);   
-if(length(r)>2.24e4)
-    tnow=2.24e4;
-else
-    tnow = m*m+1;
-end
-tau=0; xs=zeros(1,n);   % initialize variables
-tausave=zeros(1,n); tausave(1)=tau; i=0;
-mu=0.01;                            % algorithm stepsize
-delta=0.1;                          % time for derivative
+% if(length(r)>2.24e4)
+%     tnow=2.24e4;
+% else
+%     tnow = m*m+1;
+% end
+tnow = m*m+1;
+tau=0; 
+tausave(1)=tau; i=0;
+mu=1;                            % algorithm stepsize
+delta=1;                          % time for derivative
 while tnow<length(x)-m              % run iteration
   i=i+1;
   
@@ -52,7 +52,6 @@ subplot(3,1,2), plot(tausave(1:i-2))        % plot trajectory of tau
 ylabel('offset estimates'), xlabel('iterations')
 subplot(3,1,3)
 plot(r)
-
 
 end
 

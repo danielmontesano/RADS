@@ -42,7 +42,7 @@ elseif(modo == 2)
     F0_l=fc+Rb/2-Rb/2;
     F0_h=fc+Rb/2+Rb/2;
 
-    N      = 2;      % Order
+    N      = 4;      % Order
     Apass  = 1;      % Passband Ripple (dB)
     Astop  = 80;     % Stopband Attenuation (dB)
 
@@ -55,7 +55,7 @@ elseif(modo == 2)
     h1  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, Astop, Apass, Astop, fs);
     bpf_1 = design(h1, 'ellip');
     y1 = filter(bpf_1,y);
-    
+       
     % Low Pass Filter para Envolvente
     Fpass = Rb;    
     h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
@@ -65,7 +65,7 @@ elseif(modo == 2)
     y0 = filter(lpf,y0.^2);
     y1 = filter(lpf,y1.^2);   
     y_dem = (y1 - y0);
-    
+    y_dem = 2*y_dem;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %FALTA HACER EL TIME RECOVERY PARA ELEGIR EL INSTANTE IDEAL DE MUESTREO
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,6 +134,7 @@ elseif(modo == 4)
     y0 = filter(lpf,yL_f0.^2);
     y1 = filter(lpf,yL_f1.^2);
     y_dem = (y1 - y0);
+    y_dem = 6.5*y_dem;
 end
 
 end
