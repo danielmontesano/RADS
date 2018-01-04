@@ -1,4 +1,4 @@
-function [ y_out ] = canalTransmision( y, Rb, fs, d )
+function [ y_out ] = canalTransmision( y, Rb, fs, fc, d )
     
     disp_max = 180e-6; %Maxima dispersion
     multi = 2; %Numero de reflexiones de multi trayecto
@@ -20,14 +20,36 @@ function [ y_out ] = canalTransmision( y, Rb, fs, d )
     end
     
     %Ruido blanco
-    w = 0.1*randn(1,length(y_ret));
+    w = 0.1*randn(1,length(y_disp));
 
     
     %Interferencias
+    Vpk=1;
+    Vrms = Vpk/sqrt(2);
+    Prms = Vrms^2;
+    PSD_s = Prms/Rb;
+    sigma = sqrt(PSD_s)/2; %El dos es porque se tiene la misma potencia pero en toda la banda. 
+    inter = sigma*randn(1,length(y_disp));
     
-    
-    y_out = y_ret + w;
+    F_l=fc-Rb;
+    F_h=fc+Rb;
 
-    plot(y_out)
+    N      = 20;      % Order
+    Apass  = 1;      % Passband Ripple (dB)
+    Astop  = 80;     % Stopband Attenuation (dB)
+
+    % Band Pass Filter F1
+    h0  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F_l, F_h, Astop, Apass, Astop, fs);
+    bpf = design(h0, 'ellip');
+    inter_bp = filter(bpf,inter);
+  
+%     freq = linspace(0,fs, length(y));
+%     plot(freq, 20*log10(abs(fft(y))));
+%     hold on;
+%     plot(freq, 20*log10(abs(fft(inter_bp))));
+    
+    y_out = y_ret + w + inter_bp;
+
+    %plot(y_out);
 end
 
