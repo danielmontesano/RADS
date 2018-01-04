@@ -20,7 +20,7 @@ if(modo == 1)
 
         z1=sum(y_dem1)/length(y_dem1);
         z0=sum(y_dem0)/length(y_dem0);
-
+    %TODO sobra esto
         if(z1>z0)
             a=1;
         elseif(z1<z0)
@@ -93,7 +93,7 @@ elseif(modo == 3)
     bpf = design(h, 'ellip');
     dem0_filt = filter(bpf,dem0);  
     dem1_filt = filter(bpf,dem1); 
-    
+    %TODO sobra esto
     for k=Tb*fs:Tb*fs:length(y)
         if (dem1_filt(k)>dem0_filt(k))
             a=0;
