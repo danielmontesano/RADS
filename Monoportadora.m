@@ -23,7 +23,6 @@ x = [train round(rand(1,N))];
 % end
 % x = [x round(rand(1,N))];
 
-
 Rb = 564.48; %bps
 fs = 56*Rb;
 
@@ -35,6 +34,7 @@ f1 = 7*Rb;
 fc = 7.5*Rb;
 
 s = moduladorBFSK(x,Rb,f0,f1,fs);
+
 
 %% CHANNEL
 h = 1;
@@ -48,7 +48,7 @@ y=h.*s+w;
 % Opcion 3: Demodulacion de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
 % Opcion 4: PLLs para las frecuencias de los bits.
 
-[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,2);
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,4);
 [ y_sample ] = clockrec( y_dem, 0.1, fs, Rb );
 
 %% RESULTADOS
