@@ -91,7 +91,6 @@ elseif(modo == 3)
     Apass = 1;       % Passband Ripple (dB)
     Astop = 80;      % Stopband Attenuation (dB)
 
-<<<<<<< HEAD
 %     h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
 %     lpf = design(h, 'ellip');
     h = fdesign.lowpass('n,f3db', N, Fpass, fs);
@@ -112,21 +111,6 @@ elseif(modo == 3)
 %         end
 %         y_dem=[y_dem a];       
 %     end
-=======
-    h = fdesign.lowpass('n,fp,ap,ast', N, Fpass, Apass, Astop, fs);
-    bpf = design(h, 'ellip');
-    dem0_filt = filter(bpf,dem0);  
-    dem1_filt = filter(bpf,dem1); 
-    %TODO sobra esto
-    for k=Tb*fs:Tb*fs:length(y)
-        if (dem1_filt(k)>dem0_filt(k))
-            a=0;
-        elseif(dem1_filt(k)<dem0_filt(k))
-            a=1;
-        end
-        y_dem=[y_dem a];       
-    end
->>>>>>> 2b56b129179125c43a6e6264d306b55015490eff
 
 %% MODO 4: UTILIZACION DEL PLL
 elseif(modo == 4)
