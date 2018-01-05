@@ -36,7 +36,8 @@ elseif(modo == 2)
     %     F1_l=fc-175+((564.48/2)*(1-0.7));
     %     F1_h=fc+175+((564.48/2)*(1+0.7));
     
-    y = [y zeros(1,20)];
+    %TODO creo que no hace falta
+    %y = [y zeros(1,)];
     F1_l=fc-Rb/2-Rb/2;
     F1_h=fc-Rb/2+Rb/2;
     F0_l=fc+Rb/2-Rb/2;
@@ -139,8 +140,9 @@ elseif(modo == 4)
     h = fdesign.lowpass('n,f3db', N, Fpass, fs);
     lpf = design(h, 'butter');
     
-    yL_f0 = [yL_f0 zeros(1,1000)];
-    yL_f1 = [yL_f1 zeros(1,1000)];
+    %TODO parece que no hace falta.
+%     yL_f0 = [yL_f0 zeros(1,1000)];
+%     yL_f1 = [yL_f1 zeros(1,1000)];
     
     y0 = filter(lpf,yL_f0.^2);
     y1 = filter(lpf,yL_f1.^2);

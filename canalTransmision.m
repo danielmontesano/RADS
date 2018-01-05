@@ -1,26 +1,26 @@
-function [ y_out ] = canalTransmision( y, Rb, fs, fc, d )
+function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
     
     disp_max = 180e-6; %Maxima dispersion
     multi = 1; %Numero de reflexiones de multi trayecto
     
     disp = disp_max*rand(1,multi); %Retardo de las dispersiones
-    n_disp = ceil(disp*fs); %Array de numero de muestras de dispersion
+    n_disp = 200%ceil(disp*fs); %Array de numero de muestras de dispersion
     
     %Retardo
-    n_ret = ceil(d*fs/3e8); %numero de muestras en la distancia dada
-    y_ret = [zeros(1,n_ret) y zeros(1,max(n_disp))];
+    n_ret = 200%ceil(d*fs/3e8); %numero de muestras en la distancia dada
+    y_ret = [zeros(1,n_ret) s zeros(1,max(n_disp))];
     
     %Dispersion
    
     
     for k=1:multi
         a = rand(); %Coeficiente de reflexion. Se podria cambiar la distribucion o calcular ademas en funcion del retardo extra
-        y_refl = a.*y;
+        y_refl = a.*s;
         y_disp = y_ret + [zeros(1,n_ret) zeros(1,n_disp(k)) y_refl zeros(1,max(n_disp)-n_disp(k))];
     end
-    
+
     %Ruido blanco
-    w = 0.1*randn(1,length(y_disp));
+    w = 1.*randn(1,length(y_disp));
 
     
     %Interferencias
