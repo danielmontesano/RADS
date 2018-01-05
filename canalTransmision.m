@@ -1,7 +1,7 @@
 function [ y_out ] = canalTransmision( y, Rb, fs, fc, d )
     
     disp_max = 180e-6; %Maxima dispersion
-    multi = 2; %Numero de reflexiones de multi trayecto
+    multi = 1; %Numero de reflexiones de multi trayecto
     
     disp = disp_max*rand(1,multi); %Retardo de las dispersiones
     n_disp = ceil(disp*fs); %Array de numero de muestras de dispersion
@@ -43,10 +43,11 @@ function [ y_out ] = canalTransmision( y, Rb, fs, fc, d )
     bpf = design(h0, 'ellip');
     inter_bp = filter(bpf,inter);
   
-%     freq = linspace(0,fs, length(y));
-%     plot(freq, 20*log10(abs(fft(y))));
-%     hold on;
-%     plot(freq, 20*log10(abs(fft(inter_bp))));
+    freq = linspace(0,fs, length(y_disp));
+    plot(freq, 20*log10(abs(fft(w))));
+    hold on;
+    plot(freq, 20*log10(abs(fft(y_disp))));
+    plot(freq, 20*log10(abs(fft(inter_bp))));
     
     y_out = y_ret + w + inter_bp;
 
