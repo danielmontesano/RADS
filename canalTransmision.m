@@ -4,23 +4,23 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
     multi = 1; %Numero de reflexiones de multi trayecto
     
     disp = disp_max*rand(1,multi); %Retardo de las dispersiones
-    n_disp = 200%ceil(disp*fs); %Array de numero de muestras de dispersion
+    n_disp = 200; %ceil(disp*fs); %Array de numero de muestras de dispersion
     
     %Retardo
-    n_ret = 200%ceil(d*fs/3e8); %numero de muestras en la distancia dada
+    n_ret = 200; %ceil(d*fs/3e8); %numero de muestras en la distancia dada
     y_ret = [zeros(1,n_ret) s zeros(1,max(n_disp))];
     
-    %Dispersion
-   
     
+    %Dispersion    
     for k=1:multi
         a = rand(); %Coeficiente de reflexion. Se podria cambiar la distribucion o calcular ademas en funcion del retardo extra
         y_refl = a.*s;
         y_disp = y_ret + [zeros(1,n_ret) zeros(1,n_disp(k)) y_refl zeros(1,max(n_disp)-n_disp(k))];
     end
 
+    
     %Ruido blanco
-    w = 1.*randn(1,length(y_disp));
+    w = 0.5 .*randn(1,length(y_disp));
 
     
     %Interferencias
@@ -38,6 +38,7 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
     Apass  = 1;      % Passband Ripple (dB)
     Astop  = 80;     % Stopband Attenuation (dB)
 
+    
     % Band Pass Filter F1
     h0  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F_l, F_h, Astop, Apass, Astop, fs);
     bpf = design(h0, 'ellip');
@@ -51,6 +52,5 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
     
     y_out = y_ret + w + inter_bp;
 
-    %plot(y_out);
 end
 
