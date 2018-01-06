@@ -35,17 +35,11 @@ elseif(modo == 2)
     %     F0_h=fc+175-((564.48/2)*(1-0.7));
     %     F1_l=fc-175+((564.48/2)*(1-0.7));
     %     F1_h=fc+175+((564.48/2)*(1+0.7));
-    
-    %TODO creo que no hace falta
-    %y = [y zeros(1,)];
+
     F1_l=fc-Rb/2-Rb/2;
     F1_h=fc-Rb/2+Rb/2;
     F0_l=fc+Rb/2-Rb/2;
     F0_h=fc+Rb/2+Rb/2;
-%     F1_l=3950;
-%     F1_h=3954;
-%     F0_l=4514;
-%     F0_h=4518;
 
     N      = 2;      % Order
     Apass  = 1;      % Passband Ripple (dB)
@@ -83,11 +77,17 @@ elseif(modo == 2)
     
 %% MODO 3: DEMODULACIÓN NO COHERENTE Y FILTROS PASO BAJO
 elseif(modo == 3)
-    y_dem =[];
     x = Ts:Ts:length(y)/fs;
     LO_1 = cos(2*pi*f1*x);
     LO_0 = cos(2*pi*f0*x);
-
+    
+    N = 2;
+    Fl = fc-Rb;
+    Fh = fc+Rb;
+    h0 = fdesign.bandpass('n,f3db1,f3db2', N, Fl, Fh, fs);
+    bpf = design(h0, 'butter');
+    y = filter(bpf ,y);
+        
     dem1 = y.*LO_1;
     dem0 = y.*LO_0;
 
