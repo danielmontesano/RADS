@@ -42,6 +42,10 @@ elseif(modo == 2)
     F1_h=fc-Rb/2+Rb/2;
     F0_l=fc+Rb/2-Rb/2;
     F0_h=fc+Rb/2+Rb/2;
+%     F1_l=3950;
+%     F1_h=3954;
+%     F0_l=4514;
+%     F0_h=4518;
 
     N      = 2;      % Order
     Apass  = 1;      % Passband Ripple (dB)
@@ -77,7 +81,7 @@ elseif(modo == 2)
     y_dem = (y1 - y0);
     y_dem = 2.5*y_dem;
     
-%% MODO 3: DEMODULACIÓN Y FILTROS PASO BANDA SINTONIZADOS
+%% MODO 3: DEMODULACIÓN NO COHERENTE Y FILTROS PASO BAJO
 elseif(modo == 3)
     y_dem =[];
     x = Ts:Ts:length(y)/fs;

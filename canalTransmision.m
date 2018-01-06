@@ -20,7 +20,7 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
 
     
     %Ruido blanco
-    w = 0.5 .*randn(1,length(y_disp));
+    w = 0.1 .*randn(1,length(y_disp));
 
     
     %Interferencias

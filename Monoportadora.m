@@ -6,25 +6,11 @@ clc
 N = 10000; % Longitud del Mensaje
 M = 200; % Numero de simbolos necesarios para el lock del PLL
 Z = 200;
-
 % Secuencia de entrenamiento
 train = [ones(1,M) zeros(1,M)];
-syncS = [];%Start of transmission
-for i=1:Z
-    if(mod(i,2) == 1)
-        syncS = [syncS 1];
-    elseif(mod(i,2)==0)
-        syncS = [syncS 0];
-    end
-end
-syncE = []; %End of transmission
-for i=1:Z/2
-    if(mod(i,2) == 1)
-        syncE = [syncE 1 1];
-    elseif(mod(i,2)==0)
-        syncE = [syncE 0 0];
-    end
-end
+
+syncS = round(rand(1,Z));
+syncE = round(rand(1,Z));
 
 % Secuencia de entrenamiento + 0s y 1s aleatoriamente generados
 x = [train syncS round(rand(1,N)) syncE];
@@ -95,27 +81,25 @@ title('Original vs Received Signal')
 
 display(['Recovered Signal: ' num2str(y_sample)])
 
-%BER
-% [m,i] = max(xcorr(y_sample-0.5,sync-0.5)); %El -0.5 es por xcorr, al sumar 0 no lo hace bien. Sale mejor asi
-% start = i-(N+M+M+Z)+Z
-% start = abs(finddelay(y_sample-0.5,syncS-0.5))+Z+2; %El -0.5 es por xcorr, al sumar 0 no lo hace bien. Sale mejor asi
-% ends =  abs(finddelay(y_sample-0.5,syncE-0.5));
-% sizeY = length(y_sample(start:ends));
-% error = sum((x(M+M+Z+1:end-Z)-y_sample(start:ends)).^2)*100/N; %En porcentaje
+%% BER
+nStart = abs(finddelay(y_sample-0.5,syncS-0.5))+Z+1; %El -0.5 es por xcorr, al sumar 0 no lo hace bien. Sale mejor asi
+nEnd =  abs(finddelay(y_sample-0.5,syncE-0.5));
+%sizeY = length(y_sample(nStart:nEnd));
+error = sum((x(M+M+Z+1:end-Z)-y_sample(nStart:nEnd)).^2)*100/N; %En porcentaje
 % figure;
 % plot(x(M+M+Z+1:M+M+Z+1+20));
 % hold on
-% plot(y_sample(start:start+20));
+% plot(y_sample(nStart:nStart+20));
 
-[~,start] = max(xcorr(syncS-0.5,y_sample-0.5));
-[~,ends] = max(xcorr(syncE-0.5,y_sample-0.5));
-nStart = start+2*M;
-nEnds = ends-M;
-lon = length(y_sample);
-error = sum((x - y_sample(lon-nStart+1:end-nEnds)).^2)*100/N  % En porcentaje
-
-figure
-plot(y_sample(lon-nStart+1:end-nEnds));
-hold on
-plot(x);
-title('Original vs Received Signal')
+% [~,start] = max(xcorr(syncS-0.5,y_sample-0.5));
+% [~,ends] = max(xcorr(syncE-0.5,y_sample-0.5));
+% nStart = start+2*M;
+% nEnds = ends-M;
+% lon = length(y_sample);
+% error = sum((x - y_sample(lon-nStart+1:end-nEnds)).^2)*100/N  % En porcentaje
+% sol = [sol error];
+% figure
+% plot(y_sample(lon-nStart+1:end-nEnds));
+% hold on
+% plot(x);
+% title('Original vs Received Signal')
