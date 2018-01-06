@@ -9,22 +9,22 @@ Z = 200;
 
 % Secuencia de entrenamiento
 train = [ones(1,M) zeros(1,M)];
-syncS = [];%Start of transmission
-for i=1:Z
-    if(mod(i,2) == 1)
-        syncS = [syncS 1];
-    elseif(mod(i,2)==0)
-        syncS = [syncS 0];
-    end
-end
-syncE = []; %End of transmission
-for i=1:Z/2
-    if(mod(i,2) == 1)
-        syncE = [syncE 1 1];
-    elseif(mod(i,2)==0)
-        syncE = [syncE 0 0];
-    end
-end
+syncS = round(rand(1,Z));%Start of transmission
+% for i=1:Z
+%     if(mod(i,2) == 1)
+%         syncS = [syncS 1];
+%     elseif(mod(i,2)==0)
+%         syncS = [syncS 0];
+%     end
+% end
+syncE = round(rand(1,Z)); %End of transmission
+% for i=1:Z/2
+%     if(mod(i,2) == 1)
+%         syncE = [syncE 1 1];
+%     elseif(mod(i,2)==0)
+%         syncE = [syncE 0 0];
+%     end
+% end
 
 % Secuencia de entrenamiento + 0s y 1s aleatoriamente generados
 x = [train syncS round(rand(1,N)) syncE];
