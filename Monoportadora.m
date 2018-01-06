@@ -55,7 +55,7 @@ y = canalTransmision( s, Rb, fs, fc, d );
 % Opcion 4: PLLs para las frecuencias de los bits.
 
 disp('Demodulando')
-[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,3);
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,4);
 disp('Recuperando Reloj')
 [ y_sample ] = clockrec( y_dem, 0.1, fs, Rb );
 

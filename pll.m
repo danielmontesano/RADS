@@ -44,22 +44,19 @@ for n=0:N-1,
   M1 = error*k2 + M1;
   v_vect(n+1) = v;
   M2 = v + M2 + w0;
-  theta_est = M2; 
+  theta_est = M2;
 end
 
-b = 0;
+% b = 0;
+% % 
+% subplot(311)
+% plot(0:N-1, s_inVector); axis tight; grid
+% title('Re\{s_{in}\}')
 % 
-subplot(311)
-plot(0:N-1, s_inVector); axis tight; grid
-title('Re\{s_{in}\}')
-
-subplot(312)
-plot(0:N-1, s_inVector, 'b'); hold on
-plot(0:N-1, cos_out, 'r'); axis tight; grid; hold off
-title('Re\{exp_{in}\} (blue) and Re\{s_{est}\} (red)')
-
-subplot(313)
-plot(0:N-1,v_vect); grid; axis tight
-
-
-b = 0;
+% figure
+% plot(0:N-1, s_inVector, 'b'); hold on
+% plot(0:N-1, cos_out, 'r'); axis tight; grid; hold off
+% title('Re\{exp_{in}\} (blue) and Re\{s_{est}\} (red)')
+% 
+% subplot(313)
+% plot(0:N-1,v_vect); grid; axis tight

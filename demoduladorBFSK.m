@@ -81,12 +81,12 @@ elseif(modo == 3)
     LO_1 = cos(2*pi*f1*x);
     LO_0 = cos(2*pi*f0*x);
     
-    N = 2;
-    Fl = fc-Rb;
-    Fh = fc+Rb;
-    h0 = fdesign.bandpass('n,f3db1,f3db2', N, Fl, Fh, fs);
-    bpf = design(h0, 'butter');
-    y = filter(bpf ,y);
+%     N = 2;
+%     Fl = fc-Rb;
+%     Fh = fc+Rb;
+%     h0 = fdesign.bandpass('n,f3db1,f3db2', N, Fl, Fh, fs);
+%     bpf = design(h0, 'butter');
+%     y = filter(bpf ,y);
         
     dem1 = y.*LO_1;
     dem0 = y.*LO_0;
@@ -125,15 +125,17 @@ elseif(modo == 4)
     tPll = 0:Ts:(length(y)*Ts - Ts); % Vector de tiempos completo
     
     % PLL Frecuencia 1s
-    [thetaF1] = pll2(y, f1, fs, Bn);
+    [thetaF1] = pll2(y, f1, fs, Bn); % Opcion 1: COSTAS LOOP
     pll_out1 = cos(2*pi*f1*tPll - thetaF1);
+%     pll_out1 = pll(y,f1,fs,Bn); % Opcion 2: PLL
     yL_f1 = y.*pll_out1;     
     
     % PLL Frecuencia 0s
-    [thetaF0] = pll2(y, f0, fs, Bn);
+    [thetaF0] = pll2(y, f0, fs, Bn); % Opcion 1: COSTAS LOOP
     pll_out0 = sin(2*pi*f0*tPll + thetaF0);
+%     pll_out0 = pll(y,f0,fs,Bn); % Opcion 2: PLL
     yL_f0 = y.*pll_out0;
-        
+
     % Low Pass Filter para Envolvente
     N     = 4;       % Order
     Fpass = Rb;      % Passband Frequency
