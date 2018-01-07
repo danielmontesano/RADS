@@ -141,17 +141,26 @@ elseif(modo == 4)
     Fpass = Rb;      % Passband Frequency
     Apass = 1;       % Passband Ripple (dB)
     Astop = 80;      % Stopband Attenuation (dB)
-%     h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
-%     lpf = design(h, 'ellip');
+    
+%     Fpass = Rb-50;      % Passband Frequency
+%     Fstop = Rb;
+%     Apass = 1;       % Passband Ripple (dB)
+%     Astop = 40;      % Stopband Attenuation (dB)
+%     match = 'stopband';  % Band to match exactly
+
+    h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
+    lpf = design(h, 'ellip');
     h = fdesign.lowpass('n,f3db', N, Fpass, fs);
     lpf = design(h, 'butter');
+% h  = fdesign.lowpass(Fpass, Fstop, Apass, Astop, fs);
+% lpf = design(h, 'butter', 'MatchExactly', match);
     
     %TODO parece que no hace falta.
 %     yL_f0 = [yL_f0 zeros(1,1000)];
 %     yL_f1 = [yL_f1 zeros(1,1000)];
     
-    y0 = filter(lpf,yL_f0.^2);
-    y1 = filter(lpf,yL_f1.^2);
+    y0 = filter(lpf,yL_f0);
+    y1 = filter(lpf,yL_f1);
     y_dem = (y1 - y0);
     y_dem = 6.5*y_dem;
 end
