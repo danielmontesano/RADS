@@ -48,13 +48,12 @@ disp('Transmitiendo')
 y = canalTransmision( s, Rb, fs, fc, d );
 
 %% RX
-% Opcion 1: Demodulacion de los simbolos
-% Opcion 2: Filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
-% Opcion 3: Demodulacion de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
-% Opcion 4: PLLs para las frecuencias de los bits.
+% Opcion 1: Filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
+% Opcion 2: Demodulacion de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
+% Opcion 3: PLLs para las frecuencias de los bits.
 
 disp('Demodulando')
-[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,4);
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,3);
 disp('Recuperando Reloj')
 [ y_sample ] = clockrec( y_dem, 0.1, fs, Rb );
 
@@ -90,15 +89,15 @@ error = sum((x(M+M+Z+1:end-Z)-y_sample(nStart:nEnd)).^2)*100/N; %En porcentaje
 % hold on
 % plot(y_sample(nStart:nStart+20));
 
-% [~,start] = max(xcorr(syncS-0.5,y_sample-0.5));
-% [~,ends] = max(xcorr(syncE-0.5,y_sample-0.5));
-% nStart = start+2*M;
-% nEnds = ends-M;
-% lon = length(y_sample);
-% error = sum((x - y_sample(lon-nStart+1:end-nEnds)).^2)*100/N  % En porcentaje
-% sol = [sol error];
-% figure
-% plot(y_sample(lon-nStart+1:end-nEnds));
-% hold on
-% plot(x);
-% title('Original vs Received Signal')
+[~,start] = max(xcorr(syncS-0.5,y_sample-0.5));
+[~,ends] = max(xcorr(syncE-0.5,y_sample-0.5));
+nStart = start+2*M;
+nEnds = ends-M;
+lon = length(y_sample);
+error = sum((x - y_sample(lon-nStart+1:end-nEnds)).^2)*100/N  % En porcentaje
+sol = [sol error];
+figure
+plot(y_sample(lon-nStart+1:end-nEnds));
+hold on
+plot(x);
+title('Original vs Received Signal')

@@ -5,7 +5,6 @@ clc
 N = 10000; % Longitud del Mensaje
 
 % Secuencia de entrenamiento
-
 x = round(rand(1,N)); % Mensaje de 0s y 1s de longitud N
 
 Rb = 564.48; %bps
@@ -47,6 +46,7 @@ h = 1;
 w = 0.02*randn(1,length(s));
 y=h.*s+w;
 
+% Rx
 num = 1;
 start = 0; fin = 0;
 for i = 1:bloquesFrecuenciales
@@ -54,10 +54,9 @@ for i = 1:bloquesFrecuenciales
     f0 = (order(num)+0.5)*Rb;
     f1 = (order(num)-0.5)*Rb;
     % RX
-%     start = (i-1)*Th*sLen +1;
     start = fin + 1;
     fin = fin + Th*sLen +1;
-    [ y_dem_i ] = demoduladorBFSK(y(start:fin),Rb,f0,f1,fc,4);
+    [ y_dem_i ] = demoduladorEspectral(y(start:fin),Rb,f0,f1);
     [ y_sample_i ] = clockrec( y_dem_i, 0.1, fs, Rb );
     y_sample = [y_sample y_sample_i];
     num = num + 1;
