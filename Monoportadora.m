@@ -15,7 +15,6 @@ syncE = round(rand(1,Z));
 % Secuencia de entrenamiento + 0s y 1s aleatoriamente generados
 x = [train syncS round(rand(1,N)) syncE];
 
-
 % Secuencia de entrenamiento + 0s y 1s alternados
 % x = [ones(1,200) zeros(1,200)];
 % for i=1:1000
