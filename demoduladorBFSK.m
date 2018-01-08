@@ -49,29 +49,60 @@ elseif(modo == 2)
 %     h0  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F0_l, F0_h, Astop, Apass, Astop, fs);
 %     bpf_0 = design(h0, 'ellip');
     
-    h0 = fdesign.bandpass('n,f3db1,f3db2', N, F0_l, F0_h, fs);
-    bpf_0 = design(h0, 'butter');
+%     h0 = fdesign.bandpass('n,f3db1,f3db2', N, F0_l, F0_h, fs);
+%     bpf_0 = design(h0, 'butter');
+%    bpFilt = designfilt('bandpassfir', ...
+%         'CutoffFrequency1',500,'CutoffFrequency2',560, ...
+%         'SampleRate',1500);
+bpf1 = designfilt('bandpassfir', 'StopbandFrequency1', F1_l*0.8, ...
+                    'PassbandFrequency1', F1_l, 'PassbandFrequency2', ...
+                    F1_h, 'StopbandFrequency2', F1_l*1.2, ...
+                    'StopbandAttenuation1', Astop, 'PassbandRipple', ...
+                    Apass, 'StopbandAttenuation2', Astop, 'SampleRate', ...
+                    fs);
+    y1b = filtfilt(bpf1,y);
+    
+    bpf0 = designfilt('bandpassfir', 'StopbandFrequency1', F0_l*0.8, ...
+                    'PassbandFrequency1', F0_l, 'PassbandFrequency2', ...
+                    F0_h, 'StopbandFrequency2', F0_l*1.2, ...
+                    'StopbandAttenuation1', Astop, 'PassbandRipple', ...
+                    Apass, 'StopbandAttenuation2', Astop, 'SampleRate', ...
+                    fs);
+    y0b = filtfilt(bpf0,y);
        
-    y0 = filter(bpf_0,y);
+       
+%     y0 = filter(bpf_0,y);
     
     % Band Pass Filter F0
 %     h1  = fdesign.bandpass('N,Fp1,Fp2,Ast1,Ap,Ast2', N, F1_l, F1_h, Astop, Apass, Astop, fs);
 %     bpf_1 = design(h1, 'ellip');   
-    h1 = fdesign.bandpass('n,f3db1,f3db2', N, F1_l, F1_h, fs);
-    bpf_1 = design(h1, 'butter');
-    
-    y1 = filter(bpf_1,y);
-       
+%     h1 = fdesign.bandpass('n,f3db1,f3db2', N, F1_l, F1_h, fs);
+%     bpf_1 = design(h1, 'butter');
+%     
+%     y1 = filter(bpf_1,y);
+%        
     % Low Pass Filter para Envolvente
-    Fpass = Rb;    
+%     Fpass = Rb;    
 %     h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
 %     lpf = design(h, 'ellip');
-    h = fdesign.lowpass('n,f3db', N, Fpass, fs);
-    lpf = design(h, 'butter');
+%     h = fdesign.lowpass('n,f3db', N, Fpass, fs);
+%     lpf = design(h, 'butter');
+
+
+    Fpass = Rb*2;      % Passband Frequency
+    Fstop = Rb*3;
+    Apass = 0.1;       % Passband Ripple (dB)
+    Astop = 40;      % Stopband Attenuation (dB)
+
+lpf = designfilt('lowpassfir', 'PassbandFrequency', Fpass, ...
+                 'StopbandFrequency', Fstop, 'PassbandRipple', Apass, ...
+                 'StopbandAttenuation', Astop, 'SampleRate', fs);
+     y0 = filtfilt(lpf,y0b.^2);
+    y1 = filtfilt(lpf,y1b.^2);
     
     % Obtencion de Envolvente (Simbolos)
-    y0 = filter(lpf,y0.^2);
-    y1 = filter(lpf,y1.^2);   
+%     y0 = filter(lpf,y0.^2);
+%     y1 = filter(lpf,y1.^2);   
     y_dem = (y1 - y0);
     y_dem = 2.5*y_dem;
     
@@ -142,16 +173,18 @@ elseif(modo == 4)
     Apass = 1;       % Passband Ripple (dB)
     Astop = 80;      % Stopband Attenuation (dB)
     
-%     Fpass = Rb-50;      % Passband Frequency
-%     Fstop = Rb;
-%     Apass = 1;       % Passband Ripple (dB)
-%     Astop = 40;      % Stopband Attenuation (dB)
-%     match = 'stopband';  % Band to match exactly
+     N   = 10;       % Order
+    Fpass = Rb*2;      % Passband Frequency
+    Fstop = Rb*3;
+    Apass = 0.1;       % Passband Ripple (dB)
+    Astop = 40;      % Stopband Attenuation (dB)
+    match = 'stopband';  % Band to match exactly
 
-    h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
-    lpf = design(h, 'ellip');
-    h = fdesign.lowpass('n,f3db', N, Fpass, fs);
-    lpf = design(h, 'butter');
+%     h  = fdesign.lowpass('N,Fp,Ap,Ast', N, Fpass, Apass, Astop, fs);
+%     lpf = design(h, 'ellip');
+
+%     h = fdesign.lowpass('n,f3db', N, Fpass, fs);
+%     lpf = design(h, 'butter');
 % h  = fdesign.lowpass(Fpass, Fstop, Apass, Astop, fs);
 % lpf = design(h, 'butter', 'MatchExactly', match);
     
@@ -159,10 +192,18 @@ elseif(modo == 4)
 %     yL_f0 = [yL_f0 zeros(1,1000)];
 %     yL_f1 = [yL_f1 zeros(1,1000)];
     
-    y0 = filter(lpf,yL_f0);
-    y1 = filter(lpf,yL_f1);
-    y_dem = (y1 - y0);
-    y_dem = 6.5*y_dem;
+    %y0 = filter(lpf,yL_f0);
+    %y1 = filter(lpf,yL_f1);
+
+lpf = designfilt('lowpassfir', 'PassbandFrequency', Fpass, ...
+                 'StopbandFrequency', Fstop, 'PassbandRipple', Apass, ...
+                 'StopbandAttenuation', Astop, 'SampleRate', fs);
+     y0 = filtfilt(lpf,yL_f0);
+    y1 = filtfilt(lpf,yL_f1);
+    y_dem = (y1 + y0);
+    y_dem = 1*y_dem;
 end
 
 end
+
+
