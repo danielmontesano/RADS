@@ -4,11 +4,10 @@ clc
 
 %% TX
 N = 10000; % Longitud del Mensaje
-M = 200; % Numero de simbolos necesarios para el lock del PLL
-Z = 200;
+M = 0; % Numero de simbolos necesarios para el lock del PLL
+Z = 300;
 % Secuencia de entrenamiento
 train = [ones(1,M) zeros(1,M)];
-
 syncS = round(rand(1,Z));
 syncE = round(rand(1,Z));
 
@@ -40,9 +39,6 @@ s = moduladorBFSK(x,Rb,f0,f1,fs);
 
 
 %% CHANNEL
-% h = 1;
-% w = 0.02*randn(1,length(s));
-% y=h.*s+w;
 d = 10000; %Distancia del enlace
 disp('Transmitiendo')
 y = canalTransmision( s, Rb, fs, fc, d );
@@ -89,15 +85,15 @@ error = sum((x(M+M+Z+1:end-Z)-y_sample(nStart:nEnd)).^2)*100/N; %En porcentaje
 % hold on
 % plot(y_sample(nStart:nStart+20));
 
-[~,start] = max(xcorr(syncS-0.5,y_sample-0.5));
-[~,ends] = max(xcorr(syncE-0.5,y_sample-0.5));
-nStart = start+2*M;
-nEnds = ends-M;
-lon = length(y_sample);
-error = sum((x - y_sample(lon-nStart+1:end-nEnds)).^2)*100/N  % En porcentaje
-sol = [sol error];
-figure
-plot(y_sample(lon-nStart+1:end-nEnds));
-hold on
-plot(x);
-title('Original vs Received Signal')
+% [~,start] = max(xcorr(syncS-0.5,y_sample-0.5));
+% [~,ends] = max(xcorr(syncE-0.5,y_sample-0.5));
+% nStart = start+2*M;
+% nEnds = ends-M;
+% lon = length(y_sample);
+% error = sum((x - y_sample(lon-nStart+1:end-nEnds)).^2)*100/N  % En porcentaje
+% sol = [sol error];
+% figure
+% plot(y_sample(lon-nStart+1:end-nEnds));
+% hold on
+% plot(x);
+% title('Original vs Received Signal')

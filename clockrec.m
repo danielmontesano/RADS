@@ -14,10 +14,10 @@ x=r;
 % else
 %     tnow = m*m+1;
 % end
-tnow = l*2;
+tnow = l*2-15;
 tau=0; 
 tausave(1)=tau; i=0;
-mu=1.5;                            % algorithm stepsize
+mu=2;                            % algorithm stepsize
 delta=1;                          % time for derivative
 while tnow<length(x)-56              % run iteration
   i=i+1;
@@ -31,7 +31,7 @@ while tnow<length(x)-56              % run iteration
 %   x_deltam = interp1([floor(tnow+tau-delta) (floor(tnow+tau-delta)+1)],...
 %                   [x(floor(tnow+tau-delta)) x(floor(tnow+tau-delta)+1)],...
 %                   [tnow+tau-delta]);
-%               
+              
   xs(i)=interpsinc(x,tnow+tau,l);   % interp value at tnow+tau
   x_deltap=interpsinc(x,tnow+tau+delta,l); % value to right
   x_deltam=interpsinc(x,tnow+tau-delta,l); % value to left
@@ -45,13 +45,12 @@ end
 y = xs;
 
 figure
-subplot(3,1,1), plot(xs(1:i-2),'b.')        % plot constellation diagram
-title('constellation diagram');
-ylabel('estimated symbol values')
-subplot(3,1,2), plot(tausave(1:i-2))        % plot trajectory of tau
-ylabel('offset estimates'), xlabel('iterations')
-subplot(3,1,3)
-plot(r)
+subplot(2,1,1), plot(xs(1:i-2),'b.')        % plot constellation diagram
+title('Constelación de la señal');
+ylabel('Símbolo estimado')
+subplot(2,1,2), plot(tausave(1:i-2))        % plot trajectory of tau
+title('Offset (\tau)')
+ylabel('Offset (muestras)'), xlabel('Iteraciones')
 
 end
 
