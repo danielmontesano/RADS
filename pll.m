@@ -3,7 +3,7 @@ function [cos_out, error_vector] = pll(y, f0, fs, Bn)
 % Parametros
 kp=1;
 k0=1;
-dseta=1;
+dseta=8;
 T=1/fs;  %sampling frequency
 
 %Computing the P-I loop-filter constants; k1 and k2
@@ -27,8 +27,8 @@ M0=0; M1=0; M2=0;
 
 for n=0:N-1,    
   s_in  =  y(n+1);
-  s_est = -sin(theta_est);
-  c_est = cos(theta_est);
+  s_est = -sin(theta_est + 2*pi*f0*n*T);
+  c_est = cos(theta_est + 2*pi*f0*n*T);
   phase_det = kp*(s_in*s_est);
   error = phase_det;
   
@@ -43,7 +43,8 @@ for n=0:N-1,
   v         = error*k1 + error*k2 + M1;
   M1 = error*k2 + M1;
   v_vect(n+1) = v;
-  M2 = v + M2 + w0;
+  M2 = v + M2;
+  theta_est_vector(n+1) = v + M2;
   theta_est = M2;
 end
 
@@ -57,6 +58,8 @@ end
 % plot(0:N-1, s_inVector, 'b'); hold on
 % plot(0:N-1, cos_out, 'r'); axis tight; grid; hold off
 % title('Re\{exp_{in}\} (blue) and Re\{s_{est}\} (red)')
-% 
+
 % subplot(313)
 % plot(0:N-1,v_vect); grid; axis tight
+
+plot(theta_est_vector)

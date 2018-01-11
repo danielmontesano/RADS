@@ -5,7 +5,7 @@ clc
 %% TX
 N = 10000; % Longitud del Mensaje
 M = 0; % Numero de simbolos necesarios para el lock del PLL
-Z = 300;
+Z = 400;
 % Secuencia de entrenamiento
 train = [ones(1,M) zeros(1,M)];
 syncS = round(rand(1,Z));
@@ -50,23 +50,34 @@ y = canalTransmision( s, Rb, fs, fc, d );
 % Opcion 3: PLLs para las frecuencias de los bits.
 
 disp('Demodulando')
-[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,3);
+[ y_dem ] = demoduladorBFSK(y,Rb,f0,f1,fc,2);
 disp('Recuperando Reloj')
+% figure;
+% plot(y_dem)
+% hold on;
+% plot(detrend(y_dem));
+%y_dem = detrend(y_dem);
+% y_dem = y_dem./max(abs(y_dem));
 [ y_sample ] = clockrec( y_dem, 0.1, fs, Rb );
 
 %% RESULTADOS
 y_sample(y_sample>=0) = 1;
 y_sample(y_sample<0) = 0;
 
+Ts = 1/fs;
+
+t = 0:Ts:(length(y_dem)*Ts - Ts);
+
+
 figure
 subplot(4,1,1)
 plot(s);
 title('Sent Signal')
 subplot(4,1,2)
-plot(y)
+plot(t, y)
 title('Received Signal')
 subplot(4,1,3)
-plot(y_dem)
+plot(t, y_dem)
 title('Demoduladated Signal')
 subplot(4,1,4)
 plot(x);
@@ -81,10 +92,10 @@ nStart = abs(finddelay(y_sample-0.5,syncS-0.5))+Z+1; %El -0.5 es por xcorr, al s
 nEnd =  abs(finddelay(y_sample-0.5,syncE-0.5));
 %sizeY = length(y_sample(nStart:nEnd));
 error = sum((x(M+M+Z+1:end-Z)-y_sample(nStart:nEnd)).^2)*100/N; %En porcentaje
-% figure;
-% plot(x(M+M+Z+1:M+M+Z+1+20));
-% hold on
-% plot(y_sample(nStart:nStart+20));
+figure;
+plot(x(M+M+Z+1:M+M+Z+1+100));
+hold on
+plot(y_sample(nStart:nStart+100));
 
 % [~,start] = max(xcorr(syncS-0.5,y_sample-0.5));
 % [~,ends] = max(xcorr(syncE-0.5,y_sample-0.5));

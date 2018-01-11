@@ -7,13 +7,14 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
     n_disp = ceil(disp*fs); %Array de numero de muestras de dispersion
     
     %Retardo
-    n_ret = 50;%ceil(d*fs/3e8); %numero de muestras en la distancia dada
+    n_ret = 104;
+   %ceil(d*fs/3e8); %numero de muestras en la distancia dada
     y_ret = [zeros(1,n_ret) s zeros(1,max(n_disp))];
     
     
     %Dispersion    
     for k=1:multi
-        a = rand(); %Coeficiente de reflexion. Se podria cambiar la distribucion o calcular ademas en funcion del retardo extra
+        a = 1; %Coeficiente de reflexion. Se podria cambiar la distribucion o calcular ademas en funcion del retardo extra
         y_refl = a.*s;
         y_disp = y_ret + [zeros(1,n_ret) zeros(1,n_disp(k)) y_refl zeros(1,max(n_disp)-n_disp(k))];
     end
@@ -43,11 +44,11 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
     bpf = design(h0, 'ellip');
     inter_bp = filter(bpf,inter);
   
-    freq = linspace(0,fs, length(y_disp));
-    plot(freq, 20*log10(abs(fft(w))));
-    hold on;
-    plot(freq, 20*log10(abs(fft(y_disp))));
-    plot(freq, 20*log10(abs(fft(inter_bp))));
+%     freq = linspace(0,fs, length(y_disp));
+%     plot(freq, 20*log10(abs(fft(w))));
+%     hold on;
+%     plot(freq, 20*log10(abs(fft(y_disp))));
+%     plot(freq, 20*log10(abs(fft(inter_bp))));
     
     y_out = y_ret + w + inter_bp;% + y_disp;
 
