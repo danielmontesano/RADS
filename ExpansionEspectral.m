@@ -22,6 +22,10 @@ bloquesFrecuenciales = ceil(N/Th);
 s = [];
 y_sample = [];
 num = 1;
+
+fases = zeros(2,length(order_V));
+tiempos = zeros(2,length(order_V));
+
 for i = 1:bloquesFrecuenciales
     fc = order(num)*Rb;
     f0 = (order(num)+0.5)*Rb;
@@ -53,11 +57,12 @@ for i = 1:bloquesFrecuenciales
     fc = order(num)*Rb;
     f0 = (order(num)+0.5)*Rb;
     f1 = (order(num)-0.5)*Rb;
+    orderIndex = order(num)-3.5;
     % RX
     start = fin + 1;
     fin = fin + Th*sLen +1;
-    [ y_dem_i ] = demoduladorEspectral(y(start:fin),Rb,f0,f1);
-    [ y_sample_i ] = clockrec( y_dem_i, 0.1, fs, Rb );
+    [ y_dem_i,fases ] = demoduladorExpansion(y(start:fin),Rb,f0,f1,fases,orderIndex);
+    [ y_sample_i, tiempos ] = clockRecExpansion( y_dem_i, 0.1, fs, Rb, tiempos, orderIndex );
     y_sample = [y_sample y_sample_i];
     num = num + 1;
     if(num > length(order_V))
