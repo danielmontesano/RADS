@@ -42,6 +42,7 @@ s = moduladorBFSK(x,Rb,f0,f1,fs);
 d = 10000; %Distancia del enlace
 disp('Transmitiendo')
 y = canalTransmision( s, Rb, fs, fc, d );
+% y = s + 0.01.*randn(1,length(s));
 
 %% RX
 % Opcion 1: Filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.

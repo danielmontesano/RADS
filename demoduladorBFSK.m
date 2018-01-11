@@ -71,7 +71,7 @@ elseif(modo == 3)
     
     % PLL Frecuencia 0s
     [thetaF0] = pll2(y, f0, fs, Bn); % Opcion 1: COSTAS LOOP
-    pll_out0 = sin(2*pi*f0*tPll + thetaF0);
+    pll_out0 = cos(2*pi*f0*tPll - thetaF0);
     %pll_out0 = pll(y,f0,fs,Bn); % Opcion 2: PLL
     yL_f0 = y.*pll_out0;
 
@@ -87,7 +87,7 @@ elseif(modo == 3)
                  'StopbandAttenuation', Astop, 'SampleRate', fs);
     y0 = filtfilt(lpf,yL_f0);
     y1 = filtfilt(lpf,yL_f1);
-    y_dem = (y1 + y0);
+    y_dem = (y1 - y0);
     y_dem = 1*y_dem;
 end
 

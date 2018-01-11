@@ -4,10 +4,10 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
     multi = 1; %Numero de reflexiones de multi trayecto
     
     disp = disp_max*rand(1,multi); %Retardo de las dispersiones
-    n_disp = 500;%ceil(disp*fs); %Array de numero de muestras de dispersion
+    n_disp = ceil(disp*fs); %Array de numero de muestras de dispersion
     
     %Retardo
-    n_ret = 500;%ceil(d*fs/3e8); %numero de muestras en la distancia dada
+    n_ret = 50;%ceil(d*fs/3e8); %numero de muestras en la distancia dada
     y_ret = [zeros(1,n_ret) s zeros(1,max(n_disp))];
     
     
