@@ -46,10 +46,10 @@ y = xs;
 
 figure
 subplot(2,1,1), plot(xs(1:i-2),'b.')        % plot constellation diagram
-title('Constelación de la señal');
-ylabel('Símbolo estimado')
+title(['Constelación de la señal, f_c = ' num2str(orderIndex+3.5) 'Hz']);
+ylabel('Símbolo estimado' )
 subplot(2,1,2), plot(tausave(1:i-2))        % plot trajectory of tau
-title('Offset (\tau)')
+title(['Offset (\tau), f_c = ' num2str(orderIndex+3.5) 'Hz'])
 ylabel('Offset (muestras)'), xlabel('Iteraciones')
 
 tiempos(orderIndex) = tau;

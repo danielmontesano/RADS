@@ -25,7 +25,7 @@ num = 1;
 
 fases = zeros(2,length(order_V));
 tiempos = zeros(2,length(order_V));
-
+fase0 = 0.8;
 for i = 1:bloquesFrecuenciales
     fc = order(num)*Rb;
     f0 = (order(num)+0.5)*Rb;
@@ -37,7 +37,8 @@ for i = 1:bloquesFrecuenciales
     if(fin > length(x))
         fin = length(x);
     end
-    s_i = moduladorBFSK(x(start:fin),Rb,f0,f1,fs);
+    % Se almacena la fase para asegurar continuidad en fase
+    [s_i,fase0] = moduladorExpansion(x(start:fin),Rb,f0,f1,fs,fase0);
     s = [s s_i];
     num = num + 1;
     if(num > length(order_V))
@@ -47,7 +48,7 @@ end
 
 % CHANNEL
 h = 1;
-w = 0.02*randn(1,length(s));
+w = 0.01*randn(1,length(s));
 y=h.*s+w;
 
 % Rx
