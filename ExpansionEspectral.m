@@ -2,6 +2,9 @@ clear all
 close all
 clc
 
+addpath('./Monoportadora')
+addpath('./Expansion_Espectral')
+
 N = 10000; % Longitud del Mensaje
 
 % Secuencia de entrenamiento

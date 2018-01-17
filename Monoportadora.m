@@ -1,11 +1,15 @@
 clear all
 close all
 clc
-%%Parametros
-%Modo de recepcion:
-% Opcion 1: Filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
-% Opcion 2: Demodulacion de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
-% Opcion 3: PLLs para las frecuencias de los bits.
+
+addpath('./Monoportadora')
+addpath('./Expansion_Espectral')
+
+%% Parametros
+% Modos de recepcion:
+%   Opcion 1: Filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
+%   Opcion 2: Demodulacion de portadora y filtros paso-banda sintonizados a las frecuencias de los bits con deteccion de energia.
+%   Opcion 3: PLLs para las frecuencias de los bits.
 modo = 3;
 
 N = 10000; % Longitud del Mensaje
