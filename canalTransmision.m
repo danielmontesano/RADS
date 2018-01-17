@@ -1,4 +1,4 @@
-function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
+function [ y_out ] = canalTransmision( s, Rb, fs, fc, d , sigma )
     
     disp_max = 180e-6; %Maxima dispersion
     multi = 1; %Numero de reflexiones de multi trayecto
@@ -21,7 +21,7 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d )
 
     
     %Ruido blanco
-    w = 0.01.*randn(1,length(y_disp));
+    w = sigma.*randn(1,length(y_disp));
 
     
     %Interferencias
