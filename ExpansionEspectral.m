@@ -7,7 +7,7 @@ addpath('./Expansion_Espectral')
 
 N = 10000; % Longitud del Mensaje
 
-% Secuencia de entrenamiento
+%% Secuencia de entrenamiento
 x = round(rand(1,N)); % Mensaje de 0s y 1s de longitud N
 
 Rb = 564.48; %bps
@@ -26,6 +26,7 @@ s = [];
 y_sample = [];
 num = 1;
 
+%% TX
 fases = zeros(2,length(order_V));
 tiempos = zeros(2,length(order_V));
 fase0 = 0.8;
@@ -34,7 +35,7 @@ for i = 1:bloquesFrecuenciales
     f0 = (order(num)+0.5)*Rb;
     f1 = (order(num)-0.5)*Rb;
     
-    % TX
+    
     start = (i-1)*Th +1;
     fin = i*Th;
     if(fin > length(x))
@@ -49,12 +50,12 @@ for i = 1:bloquesFrecuenciales
     end
 end
 
-% CHANNEL
+%% CHANNEL
 h = 1;
 w = 0.01*randn(1,length(s));
 y=h.*s+w;
 
-% Rx
+%% Rx
 num = 1;
 start = 0; fin = 0;
 for i = 1:bloquesFrecuenciales

@@ -17,8 +17,8 @@ M = 0; % Numero de simbolos necesarios para el lock del PLL
 Z = 400; % Numero de simbolos de la secuencia de entrenamiento
 
 d = 10000; %Distancia del enlace
-sigma = 1; %Potencia de ruido
-
+sigma = 0.1; %Potencia de ruido
+dispersion = 10e-6; %Dispersion en segundos. Maximo 180uS
 %Frecuencia de simbolo
 Rb = 564.48; %bps
 fs = 56*Rb; %Hz
@@ -44,7 +44,7 @@ s = moduladorBFSK(x,Rb,f0,f1,fs);
 
 %% CHANNEL
 disp('Transmitiendo')
-y = canalTransmision( s, Rb, fs, fc, d, sigma);
+y = canalTransmision( s, Rb, fs, fc, d, sigma, dispersion);
 
 %% RX
 disp('Demodulando')

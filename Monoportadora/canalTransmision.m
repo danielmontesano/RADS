@@ -1,14 +1,13 @@
-function [ y_out ] = canalTransmision( s, Rb, fs, fc, d , sigma )
+function [ y_out ] = canalTransmision( s, Rb, fs, fc, d , sigma, dispersion )
     
-    disp_max = 180e-6; %Maxima dispersion
+    %disp_max = 180e-6; %Maxima dispersion
     multi = 1; %Numero de reflexiones de multi trayecto
     
-    disp = disp_max*rand(1,multi); %Retardo de las dispersiones
-    n_disp = ceil(disp*fs); %Array de numero de muestras de dispersion
+    %dispersion = disp_max*rand(1,multi); %Retardo de las dispersiones
+    n_disp = ceil(dispersion*fs); %Array de numero de muestras de dispersion
     
     %Retardo
-    n_ret = 104;
-   %ceil(d*fs/3e8); %numero de muestras en la distancia dada
+    n_ret = ceil(d*fs/3e8); %numero de muestras en la distancia dada
     y_ret = [zeros(1,n_ret) s zeros(1,max(n_disp))];
     
     
@@ -50,7 +49,7 @@ function [ y_out ] = canalTransmision( s, Rb, fs, fc, d , sigma )
 %     plot(freq, 20*log10(abs(fft(y_disp))));
 %     plot(freq, 20*log10(abs(fft(inter_bp))));
     
-    y_out = y_ret + w + inter_bp;% + y_disp;
+    y_out = y_ret + w + inter_bp + y_disp;
 
 end
 
